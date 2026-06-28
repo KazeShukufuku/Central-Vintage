@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "facing=down,waterlogged=false": {
+      "model": "vintagedelight:block/fermenting_jar"
+    },
+    "facing=down,waterlogged=true": {
+      "model": "vintagedelight:block/fermenting_jar"
+    },
+    "facing=east,waterlogged=false": {
+      "model": "vintagedelight:block/fermenting_jar_directional",
+      "y": 270
+    },
+    "facing=east,waterlogged=true": {
+      "model": "vintagedelight:block/fermenting_jar_directional",
+      "y": 270
+    },
+    "facing=north,waterlogged=false": {
+      "model": "vintagedelight:block/fermenting_jar_directional",
+      "y": 180
+    },
+    "facing=north,waterlogged=true": {
+      "model": "vintagedelight:block/fermenting_jar_directional",
+      "y": 180
+    },
+    "facing=south,waterlogged=false": {
+      "model": "vintagedelight:block/fermenting_jar_directional"
+    },
+    "facing=south,waterlogged=true": {
+      "model": "vintagedelight:block/fermenting_jar_directional"
+    },
+    "facing=west,waterlogged=false": {
+      "model": "vintagedelight:block/fermenting_jar_directional",
+      "y": 90
+    },
+    "facing=west,waterlogged=true": {
+      "model": "vintagedelight:block/fermenting_jar_directional",
+      "y": 90
+    }
+  }
+}

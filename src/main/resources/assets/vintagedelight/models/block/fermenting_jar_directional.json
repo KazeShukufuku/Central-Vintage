@@ -1,0 +1,7 @@
+{
+  "textures": {
+    "0": "vintagedelight:block/fermenting_jar_directional",
+    "particle": "vintagedelight:block/fermenting_jar_directional"
+  },
+  "elements": []
+}
