@@ -1,14 +1,17 @@
 package com.kazeshukufuku.centralvintage.mixin;
 
 import com.kazeshukufuku.centralvintage.content.pickling.FermentingJarOutputController;
+import com.kazeshukufuku.centralvintage.content.pickling.FermentingJarOutputVisuals;
 import com.kazeshukufuku.centralvintage.content.pickling.PicklingAcceleration;
 import com.kazeshukufuku.centralvintage.content.pickling.FermentingJarOutput;
+import com.kazeshukufuku.centralvintage.content.pickling.TimedOutputItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,17 +23,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(FermentingJarBlockEntity.class)
-public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutputController {
+public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutputController, FermentingJarOutputVisuals {
     @Unique
     private static final String CENTRALVINTAGE_PREFERRED_OUTPUT_KEY = "CentralVintagePreferredOutput";
 
     @Unique
     private static final String CENTRALVINTAGE_DISABLED_OUTPUTS_KEY = "CentralVintageDisabledOutputs";
+
+    @Unique
+    private static final String CENTRALVINTAGE_VISUALIZED_ITEMS_KEY = "CentralVintageVisualizedItems";
 
     @Shadow
     private int progress;
@@ -46,6 +53,12 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
 
     @Unique
     private Direction centralvintage$preferredOutput;
+
+    @Unique
+    private final List<TimedOutputItem> centralvintage$visualizedOutputItems = new ArrayList<>();
+
+    @Unique
+    private int centralvintage$lastVisualizedOutputTick = -1;
 
     @Shadow
     private void increaseCraftingProgress() {
@@ -119,6 +132,45 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
         blockEntity.setChanged();
     }
 
+    @Override
+    public List<TimedOutputItem> centralvintage$getVisualizedOutputItems() {
+        return centralvintage$visualizedOutputItems;
+    }
+
+    @Override
+    public void centralvintage$visualizeOutput(ItemStack stack) {
+        if (centralvintage$visualizedOutputItems.size() >= 3) {
+            return;
+        }
+
+        BlockEntity blockEntity = (BlockEntity) (Object) this;
+        ItemStack visualizedStack = stack.copy();
+        visualizedStack.setCount(Math.min(visualizedStack.getCount(), visualizedStack.getMaxStackSize()));
+        centralvintage$visualizedOutputItems.add(new TimedOutputItem(FermentingJarOutput.OUTPUT_ANIMATION_TIME, visualizedStack));
+        Level level = blockEntity.getLevel();
+        if (level != null) {
+            BlockState state = blockEntity.getBlockState();
+            level.sendBlockUpdated(blockEntity.getBlockPos(), state, state, 2);
+        }
+    }
+
+    @Override
+    public void centralvintage$tickVisualizedOutputItems(int currentTick) {
+        if (centralvintage$lastVisualizedOutputTick == -1) {
+            centralvintage$lastVisualizedOutputTick = currentTick;
+            return;
+        }
+
+        int elapsedTicks = currentTick - centralvintage$lastVisualizedOutputTick;
+        if (elapsedTicks <= 0) {
+            return;
+        }
+
+        centralvintage$lastVisualizedOutputTick = currentTick;
+        centralvintage$visualizedOutputItems.forEach(item -> item.decrement(elapsedTicks));
+        centralvintage$visualizedOutputItems.removeIf(TimedOutputItem::isFinished);
+    }
+
     @Inject(method = "saveAdditional", at = @At("TAIL"))
     private void centralvintage$saveDirectionalOutputSettings(CompoundTag tag, CallbackInfo ci) {
         if (centralvintage$preferredOutput != null) {
@@ -147,6 +199,33 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
                 centralvintage$disabledOutputs.add(direction);
             }
         }
+
+        if (tag.contains(CENTRALVINTAGE_VISUALIZED_ITEMS_KEY, Tag.TAG_LIST)) {
+            centralvintage$visualizedOutputItems.clear();
+            ListTag visualizedItems = tag.getList(CENTRALVINTAGE_VISUALIZED_ITEMS_KEY, Tag.TAG_COMPOUND);
+            for (int i = 0; i < visualizedItems.size(); i++) {
+                centralvintage$visualizedOutputItems.add(new TimedOutputItem(
+                        FermentingJarOutput.OUTPUT_ANIMATION_TIME,
+                        ItemStack.of(visualizedItems.getCompound(i))
+                ));
+            }
+            centralvintage$lastVisualizedOutputTick = -1;
+        }
+    }
+
+    @Inject(method = "getUpdateTag", at = @At("RETURN"), cancellable = true)
+    private void centralvintage$addVisualizedOutputsToUpdateTag(CallbackInfoReturnable<CompoundTag> cir) {
+        CompoundTag tag = cir.getReturnValue();
+        if (centralvintage$visualizedOutputItems.isEmpty()) {
+            return;
+        }
+
+        ListTag visualizedItems = new ListTag();
+        for (TimedOutputItem item : centralvintage$visualizedOutputItems) {
+            visualizedItems.add(item.stack().serializeNBT());
+        }
+        tag.put(CENTRALVINTAGE_VISUALIZED_ITEMS_KEY, visualizedItems);
+        centralvintage$visualizedOutputItems.clear();
     }
 
     @Inject(method = "resetProgress", at = @At("HEAD"))

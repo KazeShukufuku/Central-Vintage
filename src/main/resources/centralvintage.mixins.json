@@ -7,6 +7,9 @@
     "FermentingJarBlockMixin",
     "FermentingJarBlockEntityMixin"
   ],
+  "client": [
+    "FermentingJarBlockEntityRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

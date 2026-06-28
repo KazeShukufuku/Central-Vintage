@@ -25,6 +25,7 @@ import java.util.List;
 
 public final class FermentingJarOutput {
     public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
+    public static final int OUTPUT_ANIMATION_TIME = 10;
 
     public static Direction updateOutputDirection(Level level, BlockPos jarPos, BlockState state) {
         return updateOutputDirection(level, jarPos, state, Collections.emptyList(), null);
@@ -120,6 +121,7 @@ public final class FermentingJarOutput {
 
                 ItemStack toInsert = source.extractItem(slot, inserted, false);
                 ItemStack leftover = directBeltInputBehaviour.handleInsertion(toInsert, direction, false);
+                visualizeOutput(fermentingJar, extracted, inserted);
                 if (!leftover.isEmpty()) {
                     Block.popResource(level, jarPos, leftover);
                 }
@@ -138,6 +140,7 @@ public final class FermentingJarOutput {
 
             ItemStack toInsert = source.extractItem(slot, inserted, false);
             ItemStack leftover = ItemHandlerHelper.insertItemStacked(target, toInsert, false);
+            visualizeOutput(fermentingJar, extracted, inserted);
             if (!leftover.isEmpty()) {
                 Block.popResource(level, jarPos, leftover);
             }
@@ -150,6 +153,14 @@ public final class FermentingJarOutput {
             return null;
         }
         return blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite()).orElse(null);
+    }
+
+    private static void visualizeOutput(FermentingJarBlockEntity fermentingJar, ItemStack stack, int count) {
+        if (!stack.isEmpty() && count > 0 && fermentingJar instanceof FermentingJarOutputVisuals visuals) {
+            ItemStack visualizedStack = stack.copy();
+            visualizedStack.setCount(count);
+            visuals.centralvintage$visualizeOutput(visualizedStack);
+        }
     }
 
     private FermentingJarOutput() {
