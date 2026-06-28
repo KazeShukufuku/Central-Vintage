@@ -24,7 +24,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FermentingJarBlockEntityRenderer.class)
 public abstract class FermentingJarBlockEntityRendererMixin {
-    @Inject(method = "render(Lnet/ribs/vintagedelight/block/entity/FermentingJarBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", at = @At("TAIL"))
+    @Inject(
+            method = "render(Lnet/ribs/vintagedelight/block/entity/FermentingJarBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
+            at = @At("TAIL"),
+            remap = false
+    )
     private void centralvintage$renderVisualizedOutputItems(
             FermentingJarBlockEntity fermentingJar,
             float partialTicks,

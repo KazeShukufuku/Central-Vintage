@@ -2,6 +2,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.38'
 }
 
 version = mod_version
@@ -44,6 +45,11 @@ minecraft {
     }
 }
 
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
+}
+
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
 }
@@ -78,6 +84,8 @@ dependencies {
     implementation fg.deobf("curse.maven:farmers-delight-398521:6917255")
     implementation fg.deobf("curse.maven:create-central-kitchen-820977:6987710")
     implementation fg.deobf("curse.maven:vintage-delight-949719:5847856")
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:15.20.0.130")
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:15.20.0.130")

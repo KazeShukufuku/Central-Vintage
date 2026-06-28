@@ -39,10 +39,10 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
     @Unique
     private static final String CENTRALVINTAGE_VISUALIZED_ITEMS_KEY = "CentralVintageVisualizedItems";
 
-    @Shadow
+    @Shadow(remap = false)
     private int progress;
 
-    @Shadow
+    @Shadow(remap = false)
     private int maxProgress;
 
     @Unique
@@ -60,7 +60,7 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
     @Unique
     private int centralvintage$lastVisualizedOutputTick = -1;
 
-    @Shadow
+    @Shadow(remap = false)
     private void increaseCraftingProgress() {
     }
 
@@ -69,7 +69,8 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/ribs/vintagedelight/block/entity/FermentingJarBlockEntity;increaseCraftingProgress()V"
-            )
+            ),
+            remap = false
     )
     private void centralvintage$increaseProgressWithBlazeStoveAcceleration(FermentingJarBlockEntity instance) {
         increaseCraftingProgress();
@@ -228,12 +229,12 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
         centralvintage$visualizedOutputItems.clear();
     }
 
-    @Inject(method = "resetProgress", at = @At("HEAD"))
+    @Inject(method = "resetProgress", at = @At("HEAD"), remap = false)
     private void centralvintage$resetAccelerationRemainder(CallbackInfo ci) {
         centralvintage$fermentingAccelerationRemainder = 0.0D;
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "tick", at = @At("TAIL"), remap = false)
     private void centralvintage$exportOutputsToDirectionalTarget(
             Level level,
             BlockPos pos,
