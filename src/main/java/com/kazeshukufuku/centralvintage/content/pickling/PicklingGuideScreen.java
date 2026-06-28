@@ -19,6 +19,7 @@ import java.util.List;
 public class PicklingGuideScreen extends AbstractSimiContainerScreen<PicklingGuideMenu> {
     private static final ResourceLocation TEXTURE =
             CentralVintage.id("textures/gui/pickling_guide.png");
+    private static final float TITLE_SCALE = 0.75F;
 
     private List<Rect2i> extraAreas = Collections.emptyList();
 
@@ -46,10 +47,21 @@ public class PicklingGuideScreen extends AbstractSimiContainerScreen<PicklingGui
 
         int guideLeft = getLeftOfCentered(176);
         renderGuide(graphics, guideLeft, topPos);
-        graphics.drawString(font, title, guideLeft + (176 - font.width(title)) / 2, topPos + 5, 0xFFFFFF, false);
+        renderTitle(graphics, guideLeft, topPos);
         GuiGameElement.GuiRenderBuilder guideIcon = GuiGameElement.of(menu.getGuideStack());
         guideIcon.at(guideLeft + 176 + 16, topPos + 16, -200);
         guideIcon.scale(3).render(graphics);
+    }
+
+    private void renderTitle(GuiGraphics graphics, int x, int y) {
+        float titleX = x + (176 - font.width(title) * TITLE_SCALE) / 2.0F;
+        float titleY = y + 4.0F;
+
+        graphics.pose().pushPose();
+        graphics.pose().translate(titleX, titleY, 0);
+        graphics.pose().scale(TITLE_SCALE, TITLE_SCALE, 1);
+        graphics.drawString(font, title, 0, 0, 0xFFFFFF, false);
+        graphics.pose().popPose();
     }
 
     private void renderGuide(GuiGraphics graphics, int x, int y) {

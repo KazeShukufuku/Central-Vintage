@@ -5,6 +5,13 @@ It is not affiliated with or endorsed by the authors of those projects.
 
 ## Required Integrations
 
+- Create
+  - Repository: https://github.com/Creators-of-Create/Create
+  - Code license observed for the Create repository: MIT
+  - Copyright (c) The Create Team / The Creators of Create
+  - License text: `third_party_licenses/Create_CODE_LICENSE.txt`
+  - The fermenting jar directional output behavior in this project adapts the basin output direction selection and wrench override behavior from Create's basin implementation for use with Vintage Delight fermenting jars.
+
 - Create: Central Kitchen
   - Repository: https://github.com/DragonsPlusMinecraft/CreateCentralKitchen
   - License observed for the 1.20.1 branch: MIT

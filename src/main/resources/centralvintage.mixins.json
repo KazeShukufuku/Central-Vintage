@@ -4,6 +4,7 @@
   "package": "com.kazeshukufuku.centralvintage.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FermentingJarBlockMixin",
     "FermentingJarBlockEntityMixin"
   ],
   "injectors": {
