@@ -27,6 +27,15 @@ It is not affiliated with or endorsed by the authors of those projects.
   - Author listed on CurseForge: Ribs498
   - This project integrates with Vintage Delight fermenting recipes and the fermenting jar.
 
+## Development Tools and Generated Content
+
+- The Ponderer
+  - Repository: https://github.com/Nobodiiiii/Ponderer
+  - License observed for the 1.20.1 branch: MIT
+  - Copyright (c) 2026 Nobodiiiii
+  - License text: `third_party_licenses/Ponderer_LICENSE.txt`
+  - This project's generated Ponder scene sources and exported Ponder scene data were created and exported with The Ponderer.
+
 ## Assets
 
 The current `pickling_guide.png` item and GUI textures are blank development placeholders.
