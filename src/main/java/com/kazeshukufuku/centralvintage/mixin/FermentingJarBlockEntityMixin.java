@@ -12,10 +12,12 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.ribs.vintagedelight.block.entity.FermentingJarBlockEntity;
+import net.minecraftforge.items.ItemStackHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,8 +47,14 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
     @Shadow(remap = false)
     private int maxProgress;
 
+    @Shadow(remap = false)
+    private ItemStackHandler itemHandler;
+
     @Unique
     private double centralvintage$fermentingAccelerationRemainder;
+
+    @Unique
+    private int[] centralvintage$consumedIngredientSlots;
 
     @Unique
     private final List<Direction> centralvintage$disabledOutputs = new ArrayList<>();
@@ -232,6 +240,41 @@ public abstract class FermentingJarBlockEntityMixin implements FermentingJarOutp
     @Inject(method = "resetProgress", at = @At("HEAD"), remap = false)
     private void centralvintage$resetAccelerationRemainder(CallbackInfo ci) {
         centralvintage$fermentingAccelerationRemainder = 0.0D;
+    }
+
+    @Inject(method = "craftItem", at = @At("HEAD"), remap = false, require = 0)
+    private void centralvintage$beginIngredientConsumption(CallbackInfo ci) {
+        centralvintage$consumedIngredientSlots = new int[6];
+    }
+
+    @Inject(method = "craftItem", at = @At("RETURN"), remap = false, require = 0)
+    private void centralvintage$endIngredientConsumption(CallbackInfo ci) {
+        centralvintage$consumedIngredientSlots = null;
+    }
+
+    @Inject(method = "consumeIngredient", at = @At("HEAD"), cancellable = true, remap = false, require = 0)
+    private void centralvintage$consumeEachMatchedSlotOnce(Ingredient ingredient, CallbackInfo ci) {
+        if (centralvintage$consumedIngredientSlots == null) {
+            return;
+        }
+
+        int matchingSlot = -1;
+        int matchingSlotConsumed = Integer.MAX_VALUE;
+        for (int slot = 0; slot <= 5; slot++) {
+            ItemStack stack = itemHandler.getStackInSlot(slot);
+            int consumed = centralvintage$consumedIngredientSlots[slot];
+            if (ingredient.test(stack) && stack.getCount() > consumed && consumed < matchingSlotConsumed) {
+                matchingSlot = slot;
+                matchingSlotConsumed = consumed;
+            }
+        }
+
+        if (matchingSlot >= 0) {
+            itemHandler.extractItem(matchingSlot, 1, false);
+            centralvintage$consumedIngredientSlots[matchingSlot]++;
+        }
+
+        ci.cancel();
     }
 
     @Inject(method = "tick", at = @At("TAIL"), remap = false)
