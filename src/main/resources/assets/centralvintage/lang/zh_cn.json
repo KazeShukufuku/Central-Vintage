@@ -8,6 +8,7 @@
   "configuration.centralvintage.normalBurningFermentingSpeedMultiplier.tooltip": "烈焰人炉灶处于普通燃烧状态时的发酵速度倍率。对齐 Create: Central Kitchen 的 FADING/KINDLED 炉灶状态。",
   "configuration.centralvintage.seethingFermentingSpeedMultiplier": "超级燃烧发酵速度倍率",
   "configuration.centralvintage.seethingFermentingSpeedMultiplier.tooltip": "烈焰人炉灶处于超级燃烧状态时的发酵速度倍率。",
+  "block.vintagedelight.fermenting_jar.tooltip.summary": "腌制罐可像厨锅一样置于_烈焰人炉灶_上，以_加速腌制_",
   "centralvintage.ponder.fermenting_jar.header": "腌制罐的新特性",
   "centralvintage.ponder.fermenting_jar.text_1": "腌制罐现在有了些新特性",
   "centralvintage.ponder.fermenting_jar.text_2": "当其斜下方有合适的容器时……",

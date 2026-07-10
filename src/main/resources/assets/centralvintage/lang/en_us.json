@@ -5,14 +5,15 @@
   "configuration.centralvintage.enableBlazeStoveFermentingAcceleration": "Enable Blaze Stove Fermenting Acceleration",
   "configuration.centralvintage.enableBlazeStoveFermentingAcceleration.tooltip": "Whether fermenting jars placed on a Create: Central Kitchen blaze stove ferment faster based on the stove heat level.",
   "configuration.centralvintage.normalBurningFermentingSpeedMultiplier": "Normal Burning Fermenting Speed Multiplier",
-  "configuration.centralvintage.normalBurningFermentingSpeedMultiplier.tooltip": "Fermenting speed multiplier when the blaze stove is normally burning. Matches Create: Central Kitchen\u0027s FADING/KINDLED blaze status.",
+  "configuration.centralvintage.normalBurningFermentingSpeedMultiplier.tooltip": "Fermenting speed multiplier when the blaze stove is normally burning. Matches Create: Central Kitchen's FADING/KINDLED blaze status.",
   "configuration.centralvintage.seethingFermentingSpeedMultiplier": "Super-Heated Fermenting Speed Multiplier",
   "configuration.centralvintage.seethingFermentingSpeedMultiplier.tooltip": "Fermenting speed multiplier when the blaze stove is super-heated.",
+  "block.vintagedelight.fermenting_jar.tooltip.summary": "Fermenting Jars can be placed on _Blaze Stoves_ like Cooking Pots to _speed up pickling_.",
   "centralvintage.ponder.fermenting_jar.header": "New Fermenting Jar Features",
   "centralvintage.ponder.fermenting_jar.text_1": "Fermenting Jars now have a few new features",
   "centralvintage.ponder.fermenting_jar.text_2": "When there is a suitable container diagonally below...",
   "centralvintage.ponder.fermenting_jar.text_3": "Like a Basin, it will also create an output",
   "centralvintage.ponder.fermenting_jar.text_4": "Pickled products will drop from this output into the matching container",
   "centralvintage.ponder.tag.ponderer_exported": "The Ponderer...",
-  "centralvintage.ponder.tag.ponderer_exported.description": "This mod\u0027s Ponder scenes were created and exported with The Ponderer. Learn more: https://modrinth.com/mod/the-ponderer"
+  "centralvintage.ponder.tag.ponderer_exported.description": "This mod's Ponder scenes were created and exported with The Ponderer. Learn more: https://modrinth.com/mod/the-ponderer"
 }
